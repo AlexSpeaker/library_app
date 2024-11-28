@@ -5,6 +5,7 @@ from core.menu import book_manage_menu, main_menu, search_menu
 
 @main_menu.mark(name="Управление книгами")
 def book_manage_category(app: Library) -> None:
+    book_manage_menu.set_app(app)
     while True:
         try:
             book_manage_menu.show()
@@ -14,6 +15,7 @@ def book_manage_category(app: Library) -> None:
 
 @main_menu.mark(name="Поиск")
 def book_search_category(app: Library) -> None:
+    search_menu.set_app(app)
     while True:
         try:
             search_menu.show()
