@@ -1,10 +1,9 @@
+import inspect
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, Generic, List, Optional, ParamSpec, Tuple
 
+from core.classes.app import Library
 from core.classes.utils import print_menu
-
-if TYPE_CHECKING:
-    from core.classes.app import Library
 
 
 class MenuExit(Exception):
@@ -19,19 +18,22 @@ class NoAppClass(Exception):
     """Исключение, если в меню не нашлось экземпляра класса Library."""
 
 
+P = ParamSpec("P")
+
+
 @dataclass
-class CategoryInfo:
+class CategoryInfo(Generic[P]):
     """Класс содержит информацию об исполняющей функции категории и видимость этой категории."""
 
-    func: Callable[["Library"], None]
+    func: Callable[P, None]
     hidden: bool
 
 
 class Menu:
     """Класс меню категорий"""
 
-    __menu_dict: Dict[str, CategoryInfo] = {}
-    __app: Optional["Library"] = None
+    __menu_dict: Dict[str, Any] = {}
+    __app: Optional[Library] = None
     __message: str = "Сделайте Ваш выбор: "
 
     def __init__(self, *args: str, title: str) -> None:
@@ -44,8 +46,8 @@ class Menu:
         self.__title = title
 
     def mark(self, name: str, hidden: bool = False) -> Callable[
-        [Callable[["Library"], None]],
-        Callable[["Library"], None],
+        [Callable[P, None]],
+        Callable[P, None],
     ]:
         """
         Декоратор регистрирующий функции, для категорий меню.
@@ -55,8 +57,8 @@ class Menu:
         :return: Ссылку на функцию декоратора.
         """
 
-        def decorator(func: Callable[["Library"], None]) -> Callable[["Library"], None]:
-            self.__menu_dict[name] = CategoryInfo(func, hidden)
+        def decorator(func: Callable[P, None]) -> Callable[P, None]:
+            self.__menu_dict[name] = CategoryInfo(func=func, hidden=hidden)
             return func
 
         return decorator
@@ -100,7 +102,13 @@ class Menu:
             )
         menu = self.__get_enabled_menu()
         func = self.__menu_dict[menu[int(choice_user) - 1]].func
-        func(self.__app)
+        sig = inspect.signature(func)
+        if sig.parameters.get("app") and isinstance(
+            sig.parameters["app"].annotation, type(Library)
+        ):
+            func(app=self.__app)
+        else:
+            func()
 
     def __get_enabled_menu(self) -> List[str]:
         """
@@ -142,7 +150,7 @@ class Menu:
             return False, "Вне диапазона меню!"
         return True, "OK"
 
-    def set_app(self, app: "Library") -> None:
+    def set_app(self, app: Library) -> None:
         """
         Передаёт меню экземпляр класса Library.
 

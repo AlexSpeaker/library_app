@@ -19,5 +19,5 @@ def give_book_category(app: Library) -> None:
 
 
 @book_manage_menu.mark(name="<-- Назад")
-def exit_category(app: Library) -> None:
+def exit_category() -> None:
     raise MenuExit

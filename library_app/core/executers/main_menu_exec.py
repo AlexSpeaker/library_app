@@ -24,5 +24,5 @@ def book_search_category(app: Library) -> None:
 
 
 @main_menu.mark(name="Выйти из приложения")
-def exit_app_category(app: Library) -> None:
+def exit_app_category() -> None:
     raise AppExit
