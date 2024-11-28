@@ -1,7 +1,10 @@
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Tuple
+from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Tuple
 
 from core.classes.utils import print_menu
+
+if TYPE_CHECKING:
+    from core.classes.app import Library
 
 
 class MenuExit(Exception):
@@ -12,11 +15,15 @@ class NoCategory(Exception):
     """Исключение, если в меню не нашлось ни одной категории."""
 
 
+class NoAppClass(Exception):
+    """Исключение, если в меню не нашлось экземпляра класса Library."""
+
+
 @dataclass
 class CategoryInfo:
     """Класс содержит информацию об исполняющей функции категории и видимость этой категории."""
 
-    func: Callable[[], None]
+    func: Callable[["Library"], None]
     hidden: bool
 
 
@@ -24,6 +31,7 @@ class Menu:
     """Класс меню категорий"""
 
     __menu_dict: Dict[str, CategoryInfo] = {}
+    __app: Optional["Library"] = None
     __message: str = "Сделайте Ваш выбор: "
 
     def __init__(self, *args: str, title: str) -> None:
@@ -35,18 +43,19 @@ class Menu:
         self.__menu = list(args)
         self.__title = title
 
-    def mark(
-        self, name: str, hidden: bool = False
-    ) -> Callable[[Callable[[], None]], Callable[[], None]]:
+    def mark(self, name: str, hidden: bool = False) -> Callable[
+        [Callable[["Library"], None]],
+        Callable[["Library"], None],
+    ]:
         """
         Декоратор регистрирующий функции, для категорий меню.
 
         :param name: Название категории меню.
         :param hidden: Скрытая ли это категория.
-        :return: Callable[[Callable[[], None]], Callable[[], None]]
+        :return: Ссылку на функцию декоратора.
         """
 
-        def decorator(func: Callable[[], None]) -> Callable[[], None]:
+        def decorator(func: Callable[["Library"], None]) -> Callable[["Library"], None]:
             self.__menu_dict[name] = CategoryInfo(func, hidden)
             return func
 
@@ -69,7 +78,6 @@ class Menu:
 
         :return: None
         """
-
         while True:
             self.__show_menu()
             choice_user = input(f"{self.__message}")
@@ -78,8 +86,21 @@ class Menu:
                 print(message)
                 continue
             break
+        self.__execute(choice_user)
+
+    def __execute(self, choice_user: str) -> None:
+        """
+        Функция выполнит привязанную к категории функцию.
+        :param choice_user: Выбор пользователя.
+        :return: None
+        """
+        if self.__app is None:
+            raise NoAppClass(
+                "В меню не нашлось экземпляра игры. Воспользуйтесь методом 'set_game'"
+            )
         menu = self.__get_enabled_menu()
-        self.__menu_dict[menu[int(choice_user) - 1]].func()
+        func = self.__menu_dict[menu[int(choice_user) - 1]].func
+        func(self.__app)
 
     def __get_enabled_menu(self) -> List[str]:
         """
@@ -91,7 +112,11 @@ class Menu:
             raise NoCategory(
                 f"В меню '{self.__title}' нет зарегистрированных функций для категорий."
             )
-        return [menu for menu in self.__menu if self.__menu_dict.get(menu) and not self.__menu_dict[menu].hidden]
+        return [
+            menu
+            for menu in self.__menu
+            if self.__menu_dict.get(menu) and not self.__menu_dict[menu].hidden
+        ]
 
     def __show_menu(self) -> None:
         """
@@ -101,7 +126,6 @@ class Menu:
         """
         menu = self.__get_enabled_menu()
         print_menu(menu, self.__title)
-
 
     def __validate_choice(self, user_choice: str) -> Tuple[bool, str]:
         """
@@ -117,3 +141,12 @@ class Menu:
         if choice_int < 1 or choice_int > len(self.__get_enabled_menu()):
             return False, "Вне диапазона меню!"
         return True, "OK"
+
+    def set_app(self, app: "Library") -> None:
+        """
+        Передаёт меню экземпляр класса Library.
+
+        :param app: Экземпляр класса Library.
+        :return: None
+        """
+        self.__app = app

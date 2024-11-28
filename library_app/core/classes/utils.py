@@ -2,13 +2,10 @@ from typing import Sequence
 
 
 def one_line(message: str, width: int) -> None:
-    print(
-        "*  {:<{width_menu}}*".format(
-            message, width_menu=width
-        )
-    )
+    print("*  {:<{width_menu}}*".format(message, width_menu=width))
 
-def print_menu(categories: Sequence, title: str) -> None:
+
+def print_menu(categories: Sequence[str], title: str) -> None:
     max_word = max(list(categories) + [title], key=len)
     width_menu = len(max_word) + len(str(len(categories))) + 5
     print("*" * (width_menu + 4))

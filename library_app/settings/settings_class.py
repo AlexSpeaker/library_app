@@ -5,6 +5,7 @@ from pathlib import Path
 @dataclass(frozen=True)
 class DataBaseSettings:
     db_base_path: Path = Path(__file__).parent.parent / "database"
+    name: str = "database.json"
 
 
 @dataclass(frozen=True)
