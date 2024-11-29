@@ -59,3 +59,4 @@ class ORM(BaseORM):
             if item["id"] == model.id:
                 item.update(model.to_dict())
                 break
+        self._save_db(db)

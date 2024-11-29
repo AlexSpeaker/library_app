@@ -6,12 +6,19 @@ from typing import Any, Dict
 class BaseModel:
 
     def looks_like_strictly(self, **kwargs: str | int | bool) -> bool:
-        return all(getattr(self, key) == value for key, value in kwargs.items())
+        return all(
+            (
+                getattr(self, key).lower() == value.lower()
+                if isinstance(value, str)
+                else getattr(self, key) == value
+            )
+            for key, value in kwargs.items()
+        )
 
     def looks_like_softly(self, **kwargs: str | int | bool) -> bool:
         return all(
             (
-                getattr(self, key).startswith(value)
+                getattr(self, key).lower().startswith(value.lower())
                 if isinstance(value, str)
                 else getattr(self, key) == value
             )

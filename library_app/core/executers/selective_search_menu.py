@@ -1,30 +1,43 @@
+from typing import Sequence
+
 from core.classes.app import Library
 from core.classes.menu import MenuExit
+from core.db_models.book import Book
+from core.executers.utils import Table, get_not_empty_string
 from core.menu import selective_search_menu
 
 
 @selective_search_menu.mark(name="Поиск по названию")
 def search_by_title_category(app: Library) -> None:
-    pass
-    # title = get_not_empty_string("Введите название книги: ")
-    # books = app.orm.get_book_filter(title=title)
-    # print_books(books)
+    title = get_not_empty_string("Введите название книги: ")
+    books: Sequence[Book] = app.orm.select(Book).filter_soft(title=title)
+    if not books:
+        print("Не найдено ни одного совпадения.")
+        return
+    table = Table(books, ("id", "title", "author", "year", "status"))
+    table.show()
 
 
 @selective_search_menu.mark(name="Поиск по автору")
 def search_by_author_category(app: Library) -> None:
-    pass
-    # author = get_not_empty_string("Введите автора книги: ")
-    # books = app.orm.get_book_filter(author=author)
-    # print_books(books)
+    author = get_not_empty_string("Введите автора книги: ")
+    books: Sequence[Book] = app.orm.select(Book).filter_soft(author=author)
+    if not books:
+        print("Не найдено ни одного совпадения.")
+        return
+    table = Table(books, ("id", "title", "author", "year", "status"))
+    table.show()
 
 
 @selective_search_menu.mark(name="Поиск по году издания")
 def search_by_year_category(app: Library) -> None:
-    pass
-    # year = get_not_empty_string("Введите год издания книги: ")
-    # books = app.orm.get_book_filter(year=year)
-    # print_books(books)
+    year = get_not_empty_string("Введите год издания книги: ")
+    books: Sequence[Book] = app.orm.select(Book).filter_strict(year=int(year))
+    if not books:
+        print("Не найдено ни одного совпадения.")
+        return
+    table = Table(books, ("id", "title", "author", "year", "status"))
+    table.show()
 
 
 @selective_search_menu.mark(name="<-- Назад")

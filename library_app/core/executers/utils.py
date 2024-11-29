@@ -2,8 +2,6 @@ import re
 from datetime import datetime
 from typing import Any, List, Sequence
 
-from core.db_models.book import Book
-
 
 def get_not_empty_string(msg: str) -> str:
     while True:
@@ -92,11 +90,3 @@ class Table:
         self.__print_header()
         self.__print_body()
         self.__print_footer()
-
-
-def print_books(books: Sequence[Book]) -> None:
-    if books:
-        table = Table(books, ("id", "title", "author", "year", "status"))
-        table.show()
-    else:
-        print("Не найдено ни одной книги.")
