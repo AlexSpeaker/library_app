@@ -8,6 +8,7 @@ from settings.settings_class import Settings
 
 class BaseORM:
     """Базовый класс ORM"""
+
     def __init__(self, settings: Settings):
         """
         Инициализация класса.
@@ -45,6 +46,7 @@ class BaseORM:
 
 class ORM(BaseORM):
     """Класс ORM"""
+
     def __init__(self, settings: Settings):
         """
         Инициализация класса.

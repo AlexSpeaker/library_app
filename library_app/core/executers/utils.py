@@ -56,6 +56,7 @@ def get_year(msg: str) -> str:
 
 class Table:
     """Класс для таблиц."""
+
     def __init__(self, objects: Sequence[Any], columns: Sequence[str]) -> None:
         """
         Инициализация класса.
@@ -123,7 +124,6 @@ class Table:
 
         :return: None.
         """
-        pass
 
     def __get_size_columns(self) -> List[int]:
         """

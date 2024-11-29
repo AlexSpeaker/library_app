@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 class QuerySet:
     """Класс QuerySet"""
+
     def __init__(self, model: Any, database: Dict[str, List[Dict[str, Any]]]) -> None:
         """
         Инициализация класса.

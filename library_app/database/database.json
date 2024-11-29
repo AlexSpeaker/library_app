@@ -20,6 +20,34 @@
             "year": 2019,
             "status": true,
             "id": 3
+        },
+        {
+            "title": "Ночь перед Рождеством",
+            "author": "Гоголь",
+            "year": 1832,
+            "status": true,
+            "id": 4
+        },
+        {
+            "title": "Вий",
+            "author": "Гоголь",
+            "year": 1835,
+            "status": true,
+            "id": 5
+        },
+        {
+            "title": "Мастер и Маргарита",
+            "author": "Булгаков",
+            "year": 1967,
+            "status": true,
+            "id": 6
+        },
+        {
+            "title": "Собачье сердце",
+            "author": "Булгаков",
+            "year": 1968,
+            "status": true,
+            "id": 7
         }
     ]
 }

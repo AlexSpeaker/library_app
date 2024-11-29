@@ -5,6 +5,7 @@ from typing import Any, Dict
 @dataclass
 class BaseModel:
     """Базовый класс модели базы данных"""
+
     def looks_like_strictly(self, **kwargs: str | int | bool) -> bool:
         """
         Строгое соответствие.
