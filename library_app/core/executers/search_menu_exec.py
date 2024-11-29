@@ -18,6 +18,9 @@ def find_book_category(app: Library) -> None:
 @search_menu.mark(name="Все книги")
 def all_book_category(app: Library) -> None:
     books = app.orm.select(Book).all()
+    if not books:
+        print("Библиотека пуста.")
+        return
     table = Table(books, ("id", "title", "author", "year", "status"))
     table.show()
 
