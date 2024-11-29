@@ -33,7 +33,13 @@ class Book:
         :param year: Год издания.
         :return: True при первом совпадении одного из переданных аргументов, иначе False.
         """
-        return self.title == title or self.author == author or self.year == year
+        if title:
+            return self.title.lower().startswith(title.lower())
+        elif author:
+            return self.author.lower().startswith(author.lower())
+        elif year:
+            return self.year == year
+        return False
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(

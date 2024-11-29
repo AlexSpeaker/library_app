@@ -60,14 +60,14 @@ class BookORMSafeMethods(BaseORM):
         return Book(id=book_id, **pre_book)
 
 
-class ORMNoSafeMethods(BaseORM):
-    def delete_book(self, book_id: int | str) -> None:
-        book_id = str(book_id)
+class ORM(BookORMSafeMethods):
+    def __init__(self, settings: Settings):
+        super().__init__(settings)
+
+    def delete_book(self, book: Book) -> None:
+        book_bd = self.get_book(book.id)
         db = self._get_database()
-        pre_book = db.get(book_id)
-        if not pre_book:
-            raise ORMException
-        db.pop(book_id)
+        db.pop(book_bd.id)
         self._save_db(db)
 
     def add_book(self, book: Book) -> None:
@@ -78,7 +78,10 @@ class ORMNoSafeMethods(BaseORM):
         db[new_id] = data
         self._save_db(db)
 
-
-class ORM(BookORMSafeMethods, ORMNoSafeMethods):
-    def __init__(self, settings: Settings):
-        super().__init__(settings)
+    def update_book(self, book: Book) -> None:
+        book_bd = self.get_book(book.id)
+        db = self._get_database()
+        data = book.to_dict()
+        data.pop("id")
+        db[book_bd.id].update(data)
+        self._save_db(db)

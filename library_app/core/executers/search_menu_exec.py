@@ -1,19 +1,23 @@
 from core.classes.app import Library
 from core.classes.menu import MenuExit
-from core.executers.utils import Table
-from core.menu import search_menu
+from core.executers.utils import print_books
+from core.menu import search_menu, selective_search_menu
 
 
 @search_menu.mark(name="Найти книгу")
 def find_book_category(app: Library) -> None:
-    pass
+    selective_search_menu.set_app(app)
+    while True:
+        try:
+            selective_search_menu.show()
+        except MenuExit:
+            break
 
 
 @search_menu.mark(name="Все книги")
 def all_book_category(app: Library) -> None:
     books = app.orm.get_all_books()
-    table = Table(books, ("id", "title", "author", "year", "status"))
-    table.show()
+    print_books(books)
 
 
 @search_menu.mark(name="<-- Назад")
