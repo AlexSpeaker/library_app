@@ -4,5 +4,11 @@
         "author": "Носов",
         "year": "1988",
         "status": true
+    },
+    "2": {
+        "title": "Вий",
+        "author": "Гоголь",
+        "year": "1988",
+        "status": true
     }
 }

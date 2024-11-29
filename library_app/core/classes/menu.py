@@ -32,7 +32,6 @@ class CategoryInfo(Generic[P]):
 class Menu:
     """Класс меню категорий"""
 
-    __menu_dict: Dict[str, Any] = {}
     __app: Optional[Library] = None
     __message: str = "Сделайте Ваш выбор: "
 
@@ -44,6 +43,7 @@ class Menu:
         """
         self.__menu = list(args)
         self.__title = title
+        self.__menu_dict: Dict[str, Any] = {}
 
     def mark(self, name: str, hidden: bool = False) -> Callable[
         [Callable[P, None]],
@@ -58,6 +58,11 @@ class Menu:
         """
 
         def decorator(func: Callable[P, None]) -> Callable[P, None]:
+            if self.__menu_dict.get(name):
+                print(self.__menu_dict)
+                raise ValueError(
+                    f"Категория '{name}' уже зарегистрирована в меню '{self.__title}'."
+                )
             self.__menu_dict[name] = CategoryInfo(func=func, hidden=hidden)
             return func
 

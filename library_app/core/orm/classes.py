@@ -11,22 +11,30 @@ class ORMException(Exception):
     """Исключения в ORM"""
 
 
-class ORM:
+class BaseORM:
     def __init__(self, settings: Settings):
         self.__settings: Settings = settings
         db_dir: Path = settings.db_settings.db_base_path
         db_name: str = settings.db_settings.name
         self.__db_path: Path = db_dir / db_name
 
-    def __get_database(self) -> Dict[str, Dict[str, Any]]:
+    def _get_database(self) -> Dict[str, Dict[str, Any]]:
         with open(self.__db_path, "r", encoding="utf-8") as file:
             db = json.load(file)
         if not isinstance(db, dict):
             raise ValueError("Загруженные данные не являются словарем.")
         return db
 
+    def _save_db(self, db: Dict[str, Dict[str, Any]]) -> None:
+        with open(self.__db_path, "w", encoding="utf-8") as file:
+            json.dump(
+                db, file, ensure_ascii=False, indent=4
+            )  # Почему-то у меня тут pycharm ругается, хотя у mypy вопросов нет.
+
+
+class BookORMSafeMethods(BaseORM):
     def get_all_books(self) -> Tuple[Book, ...]:
-        db = self.__get_database()
+        db = self._get_database()
         return tuple(Book(id=key, **value) for key, value in db.items())
 
     def get_book_filter(
@@ -45,31 +53,32 @@ class ORM:
 
     def get_book(self, book_id: int | str) -> Book:
         book_id = str(book_id)
-        db = self.__get_database()
+        db = self._get_database()
         pre_book = db.get(book_id)
         if not pre_book:
             raise ORMException
         return Book(id=book_id, **pre_book)
 
+
+class ORMNoSafeMethods(BaseORM):
     def delete_book(self, book_id: int | str) -> None:
         book_id = str(book_id)
-        db = self.__get_database()
+        db = self._get_database()
         pre_book = db.get(book_id)
         if not pre_book:
             raise ORMException
         db.pop(book_id)
-        self.__save_db(db)
-
-    def __save_db(self, db: Dict[str, Dict[str, Any]]) -> None:
-        with open(self.__db_path, "w", encoding="utf-8") as file:
-            json.dump(
-                db, file, ensure_ascii=False, indent=4
-            )  # Почему-то у меня тут pycharm ругается, хотя у mypy вопросов нет.
+        self._save_db(db)
 
     def add_book(self, book: Book) -> None:
-        db = self.__get_database()
+        db = self._get_database()
         new_id = str(get_next_id(db))
         data = book.to_dict()
         data.pop("id")
         db[new_id] = data
-        self.__save_db(db)
+        self._save_db(db)
+
+
+class ORM(BookORMSafeMethods, ORMNoSafeMethods):
+    def __init__(self, settings: Settings):
+        super().__init__(settings)

@@ -39,3 +39,7 @@ class Book:
         return asdict(
             self
         )  # Почему-то у меня тут pycharm ругается, хотя у mypy вопросов нет.
+
+    @property
+    def status_str(self) -> str:
+        return "В наличии" if self.status else "Выдана"
