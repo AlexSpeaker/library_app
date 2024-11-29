@@ -1,9 +1,11 @@
-from dataclasses import asdict, dataclass
-from typing import Any, Dict, Optional
+from dataclasses import dataclass
+from typing import Optional
+
+from core.orm.classes.model import BaseModel
 
 
 @dataclass
-class Book:
+class Book(BaseModel):
     """
     Модель книги.
 
@@ -14,37 +16,13 @@ class Book:
     **status** - Статус книги: “в наличии (True)”, “выдана (False)”.
     """
 
+    __tablename__ = "book"
+
     title: str
     author: str
-    year: str
+    year: int
     status: bool = True  # True - в наличии, False - выдана
-    id: Optional[str] = None
-
-    def looks_like(
-        self,
-        title: Optional[str] = None,
-        author: Optional[str] = None,
-        year: Optional[str] = None,
-    ) -> bool:
-        """
-        Функция вернёт True при первом совпадении одного из переданных аргументов.
-        :param title: Название книги.
-        :param author: Автор книги.
-        :param year: Год издания.
-        :return: True при первом совпадении одного из переданных аргументов, иначе False.
-        """
-        if title:
-            return self.title.lower().startswith(title.lower())
-        elif author:
-            return self.author.lower().startswith(author.lower())
-        elif year:
-            return self.year == year
-        return False
-
-    def to_dict(self) -> Dict[str, Any]:
-        return asdict(
-            self
-        )  # Почему-то у меня тут pycharm ругается, хотя у mypy вопросов нет.
+    id: Optional[int] = None
 
     @property
     def status_str(self) -> str:

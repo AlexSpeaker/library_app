@@ -1,6 +1,5 @@
 from core.classes.app import Library
 from core.classes.menu import MenuExit
-from core.executers.utils import print_books
 from core.menu import search_menu, selective_search_menu
 
 
@@ -16,8 +15,9 @@ def find_book_category(app: Library) -> None:
 
 @search_menu.mark(name="Все книги")
 def all_book_category(app: Library) -> None:
-    books = app.orm.get_all_books()
-    print_books(books)
+    pass
+    # books = app.orm.get_all_books()
+    # print_books(books)
 
 
 @search_menu.mark(name="<-- Назад")

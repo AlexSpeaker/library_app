@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from core.orm.classes import ORM
+from core.orm.classes.orm import ORM
 from settings.settings_class import Settings
 
 
