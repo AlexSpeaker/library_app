@@ -3,7 +3,7 @@ from typing import Sequence
 from core.classes.app import Library
 from core.classes.menu import MenuExit
 from core.db_models.book import Book
-from core.executers.utils import Table, get_not_empty_string
+from core.executers.utils import Table, get_not_empty_string, get_year
 from core.menu import selective_search_menu
 
 
@@ -52,7 +52,7 @@ def search_by_year_category(app: Library) -> None:
     :param app: Экземпляр класса Library.
     :return: None.
     """
-    year = get_not_empty_string("Введите год издания книги: ")
+    year = get_year("Введите год издания книги: ")
     books: Sequence[Book] = app.orm.select(Book).filter_strict(year=int(year))
     if not books:
         print("Не найдено ни одного совпадения.")
