@@ -14,7 +14,7 @@ def add_book_category(app: Library) -> None:
     после чего книга добавляется в библиотеку с уникальным id и статусом “в наличии”.
 
     :param app: Экземпляр класса Library.
-    :return: None
+    :return: None.
     """
     title = get_not_empty_string("Введите название книги: ")
     author = get_not_empty_string("Ведите автора: ")
@@ -26,6 +26,13 @@ def add_book_category(app: Library) -> None:
 
 @book_manage_menu.mark(name="Удалить книгу")
 def delete_book_category(app: Library) -> None:
+    """
+    Пользователь вводит id книги и функция её удаляет, если она существует,
+    иначе функция сообщит, что такой книги нет и ничего не произойдёт.
+
+    :param app: Экземпляр класса Library.
+    :return: None.
+    """
     id_book = get_id("Введите id книги: ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
@@ -46,6 +53,14 @@ def delete_book_category(app: Library) -> None:
 
 @book_manage_menu.mark(name="Выдать книгу читателю")
 def give_book_category(app: Library) -> None:
+    """
+    Пользователь вводит id книги и функция её пометит как 'выдана', если она существует,
+    иначе функция сообщит, что такой книги нет и ничего не произойдёт.
+    Если книга уже была выдана, то функция также сообщит об этом.
+
+    :param app: Экземпляр класса Library.
+    :return: None.
+    """
     id_book = get_id("Введите id книги: ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
@@ -61,6 +76,14 @@ def give_book_category(app: Library) -> None:
 
 @book_manage_menu.mark(name="Принять книгу")
 def accept_book_category(app: Library) -> None:
+    """
+    Пользователь вводит id книги и функция её пометит как 'в наличии', если она существует,
+    иначе функция сообщит, что такой книги нет и ничего не произойдёт.
+    Если книга уже была в наличии, то функция также сообщит об этом.
+
+    :param app: Экземпляр класса Library.
+    :return: None.
+    """
     id_book = get_id("Введите id книги: ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
@@ -80,4 +103,9 @@ def accept_book_category(app: Library) -> None:
 
 @book_manage_menu.mark(name="<-- Назад")
 def exit_category() -> None:
+    """
+    Функция выхода из меню.
+
+    :return: None.
+    """
     raise MenuExit

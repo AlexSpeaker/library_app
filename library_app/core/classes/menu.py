@@ -40,6 +40,7 @@ class Menu:
         Инициализация класса Menu.
 
         :param args: Перечень категорий меню. В этом же порядке они будут выводиться на экран.
+        :param title: Название таблицы.
         """
         self.__menu = list(args)
         self.__title = title
@@ -98,6 +99,7 @@ class Menu:
     def __execute(self, choice_user: str) -> None:
         """
         Функция выполнит привязанную к категории функцию.
+
         :param choice_user: Выбор пользователя.
         :return: None
         """

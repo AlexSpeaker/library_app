@@ -16,7 +16,12 @@ class Library:
     """Класс приложения."""
 
     def __init__(self, start_menu: "Menu", settings: Settings) -> None:
-        """Инициализация класса."""
+        """
+        Инициализация класса.
+
+        :param start_menu: Подключается главное меню.
+        :param settings: Подключаются настройки.
+        """
         self.__start_menu = start_menu
         self.__start_menu.set_app(self)
         self.__settings = settings
