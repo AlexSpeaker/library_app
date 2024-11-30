@@ -16,7 +16,7 @@ class Book(BaseModel):
     **status** - Статус книги: “в наличии (True)”, “выдана (False)”.
     """
 
-    __tablename__ = "book"
+    __tablename__ = "books"
 
     title: str
     author_id: Optional[int]

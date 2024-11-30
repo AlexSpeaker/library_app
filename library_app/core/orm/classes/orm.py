@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 from core.orm.classes.queryset import QuerySet
 from settings.settings_class import Settings
@@ -79,6 +79,25 @@ class ORM(BaseORM):
         db[table_name].append(model.to_dict())
         self._save_db(db)
         return model
+
+    def bulk_create(self, *models: Any) -> Tuple[Any, ...]:
+        """
+        Массовое создание объектов.
+
+        :param models: Модели.
+        :return: Кортеж из моделей с id.
+        """
+        return tuple(self.add(model) for model in models)
+
+    def bulk_delete(self, *models: Any) -> None:
+        """
+        Массовое удаление объектов.
+
+        :param models: Модели.
+        :return: None
+        """
+        for model in models:
+            self.delete(model)
 
     def delete(self, model: Any) -> None:
         """

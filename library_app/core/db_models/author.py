@@ -14,7 +14,7 @@ class Author(BaseModel):
     **last_name** - Фамилия автора. \n
     """
 
-    __tablename__ = "author"
+    __tablename__ = "authors"
 
     first_name: str
     last_name: str
