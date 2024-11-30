@@ -37,9 +37,9 @@ def orm_with_data(settings: Settings) -> Generator[ORM, None, None]:
     book_5 = Book(title="Собачье сердце", author_id=author_2.id, year=1968)
     orm.bulk_create(book_1, book_2, book_3, book_4, book_5)
     yield orm
-    books = orm.select(Book).all()
-    authors = orm.select(Author).all()
-    orm.bulk_delete(*books, *authors)
+    db_path = settings.db_settings.db_base_path / settings.db_settings.name
+    with open(db_path, "w", encoding="utf-8") as file:
+        json.dump({}, file, ensure_ascii=False, indent=2)
 
 
 @pytest.fixture
