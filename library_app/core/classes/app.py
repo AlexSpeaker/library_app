@@ -55,4 +55,4 @@ class Library:
             try:
                 self.__start_menu.show()
             except AppExit:
-                exit(0)
+                break

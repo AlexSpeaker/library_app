@@ -17,8 +17,11 @@ def settings() -> Settings:
 
 
 @pytest.fixture
-def app(settings: Settings) -> Library:
-    return Library(main_menu, settings)
+def app(settings: Settings) -> Generator[Library, None, None]:
+    yield Library(main_menu, settings)
+    db_path = settings.db_settings.db_base_path / settings.db_settings.name
+    with open(db_path, "w", encoding="utf-8") as file:
+        json.dump({}, file, ensure_ascii=False, indent=2)
 
 
 @pytest.fixture

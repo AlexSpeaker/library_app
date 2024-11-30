@@ -46,6 +46,22 @@ class Menu:
         self.__title = title
         self.__menu_dict: Dict[str, Any] = {}
 
+    def get_title(self) -> str:
+        """
+        Вернёт название меню.
+
+        :return: Название меню
+        """
+        return self.__title
+
+    def get_menu_list(self) -> List[str]:
+        """
+        Вернёт список категорий меню.
+
+        :return: Список категорий меню.
+        """
+        return self.__menu
+
     def mark(self, name: str, hidden: bool = False) -> Callable[
         [Callable[P, None]],
         Callable[P, None],
