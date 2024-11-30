@@ -1,7 +1,8 @@
-from typing import Optional
+from typing import Optional, Tuple
 
 from core.classes.app import Library
 from core.classes.menu import MenuExit
+from core.db_models.author import Author
 from core.db_models.book import Book
 from core.executers.utils import get_id, get_not_empty_string, get_year
 from core.menu import book_manage_menu
@@ -19,7 +20,22 @@ def add_book_category(app: Library) -> None:
     title = get_not_empty_string("Введите название книги: ")
     author = get_not_empty_string("Ведите автора: ")
     year = get_year("Введите год выпуска книги: ")
-    book = Book(title=title, author=author, year=int(year))
+    author_info = author.split(" ")
+    first_name, last_name = (
+        (author_info[0], author_info[1])
+        if len(author_info) == 2
+        else ("", author_info[0])
+    )
+    author_obj: Tuple[Author, ...] = app.orm.select(Author).filter_strict(
+        first_name=first_name, last_name=last_name
+    )
+
+    author_bd: Author = (
+        app.orm.add(Author(first_name=first_name, last_name=last_name))
+        if not author_obj
+        else author_obj[0]
+    )
+    book = Book(title=title, year=int(year), author_id=author_bd.id)
     app.orm.add(book)
     print("Готово.")
 

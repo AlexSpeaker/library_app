@@ -1,7 +1,7 @@
 from core.classes.app import Library
 from core.classes.menu import MenuExit
 from core.db_models.book import Book
-from core.executers.utils import Table
+from core.executers.utils import Table, get_data_books_for_table
 from core.menu import search_menu, selective_search_menu
 
 
@@ -33,7 +33,8 @@ def all_book_category(app: Library) -> None:
     if not books:
         print("Библиотека пуста.")
         return
-    table = Table(books, ("id", "title", "author", "year", "status"))
+    data_list = get_data_books_for_table(books, app)
+    table = Table(data_list, ("id", "title", "author", "year", "status"))
     table.show()
 
 

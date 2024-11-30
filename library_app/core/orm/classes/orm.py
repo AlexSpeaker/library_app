@@ -40,7 +40,7 @@ class BaseORM:
         """
         with open(self.__db_path, "w", encoding="utf-8") as file:
             json.dump(
-                db, file, ensure_ascii=False, indent=4
+                db, file, ensure_ascii=False, indent=2
             )  # Почему-то у меня тут pycharm подсвечивает file, хотя у mypy вопросов нет.
 
 

@@ -1,6 +1,10 @@
 import re
 from datetime import datetime
-from typing import Any, List, Sequence
+from typing import Any, List, Optional, Sequence
+
+from core.classes.app import Library
+from core.db_models.author import Author
+from core.db_models.book import Book
 
 
 def get_not_empty_string(msg: str) -> str:
@@ -57,22 +61,40 @@ def get_year(msg: str) -> str:
 class Table:
     """Класс для таблиц."""
 
-    def __init__(self, objects: Sequence[Any], columns: Sequence[str]) -> None:
+    def __init__(self, data: Sequence[Sequence[Any]], columns: Sequence[str]) -> None:
         """
         Инициализация класса.
-
-        :param objects: Объект для печати.
-        :param columns: Какие и в каком порядке выводить столбцы.
+        :param data: Данные для печати.
+            Количество данных в каждой последовательности должно быть равно количеству столбцов.
+        :param columns: Название столбцов.
         """
-        self.__objects = objects
+        for item_data in data:
+            if len(item_data) != len(columns):
+                raise ValueError(
+                    "Количество передаваемых данных для строки не равно количеству столбцов."
+                )
+        self.__data_sequence = data
         self.__columns = columns
         self.__size_columns = self.__get_size_columns()
         self.__number_partitions = len(columns) + 1
         self.__width_all_table = sum(self.__size_columns) + self.__number_partitions
 
+    def __get_size_columns(self) -> List[int]:
+        """
+        Вернёт список из размеров столбцов (по порядку),
+        размер определяется по максимальному контенту столбца.
+        :return: None.
+        """
+        size_columns = [len(col) for col in self.__columns]
+        for i in range(len(self.__columns)):
+            size_column = max((len(str(data[i])) + 4) for data in self.__data_sequence)
+            if size_columns[i] < size_column:
+                size_columns[i] = size_column
+        return size_columns
+
     def __print_header(self) -> None:
         """
-        Печать шапки таблицы. Это будут категории.
+        Печать шапки таблицы. Названия столбцов.
         :return: None.
         """
         print("-" * self.__width_all_table)
@@ -88,35 +110,14 @@ class Table:
 
         :return: None.
         """
-        for obj in self.__objects:
+        for data in self.__data_sequence:
             print("|", end="")
-            for column, size_column in zip(self.__columns, self.__size_columns):
-                value = str(self.__get_obj_value(obj, column))
+            for value, size_column in zip(data, self.__size_columns):
                 print(
                     "{:^{size_column}}|".format(value, size_column=size_column), end=""
                 )
             print()
             print("-" * self.__width_all_table)
-
-    @staticmethod
-    def __get_obj_value(obj: Any, name: str) -> Any:
-        """
-        Функция проверит value, если тип будет bool, то попытается получить значение с приставкой _str,
-        если такое значение найдётся, то вернёт его, иначе как есть.
-
-        :param obj: Объект для извлечения данных.
-        :param name: Атрибут.
-        :return: Any.
-        """
-        value = getattr(obj, name)
-        if isinstance(value, bool):
-            try:
-                value_str = getattr(obj, f"{name}_str")
-            except AttributeError:
-                pass
-            else:
-                value = value_str
-        return value
 
     def __print_footer(self) -> None:
         """
@@ -124,20 +125,6 @@ class Table:
 
         :return: None.
         """
-
-    def __get_size_columns(self) -> List[int]:
-        """
-        Вернёт список из размеров столбцов (по порядку),
-        размер определяется по максимальному контенту столбца.
-        :return: None.
-        """
-        size_columns = []
-        for col in self.__columns:
-            size_column = max(
-                (len(str(self.__get_obj_value(obj, col))) + 4) for obj in self.__objects
-            )
-            size_columns.append(size_column)
-        return size_columns
 
     def show(self) -> None:
         """
@@ -148,3 +135,26 @@ class Table:
         self.__print_header()
         self.__print_body()
         self.__print_footer()
+
+
+def get_data_books_for_table(books: Sequence[Book], app: Library) -> List[List[str]]:
+    """
+    Преобразует последовательность из книг в данные для таблицы.
+
+    :param books: Последовательность из книг.
+    :param app: Экземпляр приложения Library.
+    :return: Данные для таблицы.
+    """
+    data_list = []
+    for book in books:
+        if book.author_id:
+            author: Optional[Author] = app.orm.select(Author).get(book.author_id)
+            if author:
+                author_name = " ".join([author.first_name, author.last_name])
+            else:
+                author_name = str(book.author_id)
+        else:
+            raise ValueError(f"У книги {book.title} неожиданно отсутствует author_id")
+        data = [str(book.id), book.title, author_name, str(book.year), book.status_str]
+        data_list.append(data)
+    return data_list

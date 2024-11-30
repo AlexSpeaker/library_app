@@ -3,7 +3,12 @@ from typing import Sequence
 from core.classes.app import Library
 from core.classes.menu import MenuExit
 from core.db_models.book import Book
-from core.executers.utils import Table, get_not_empty_string, get_year
+from core.executers.utils import (
+    Table,
+    get_data_books_for_table,
+    get_not_empty_string,
+    get_year,
+)
 from core.menu import selective_search_menu
 
 
@@ -21,7 +26,8 @@ def search_by_title_category(app: Library) -> None:
     if not books:
         print("Не найдено ни одного совпадения.")
         return
-    table = Table(books, ("id", "title", "author", "year", "status"))
+    data_list = get_data_books_for_table(books, app)
+    table = Table(data_list, ("id", "title", "author", "year", "status"))
     table.show()
 
 
@@ -34,13 +40,13 @@ def search_by_author_category(app: Library) -> None:
     :param app: Экземпляр класса Library.
     :return: None.
     """
-    author = get_not_empty_string("Введите автора книги: ")
-    books: Sequence[Book] = app.orm.select(Book).filter_soft(author=author)
-    if not books:
-        print("Не найдено ни одного совпадения.")
-        return
-    table = Table(books, ("id", "title", "author", "year", "status"))
-    table.show()
+    # author = get_not_empty_string("Введите автора книги: ")
+    # books: Sequence[Book] = app.orm.select(Book).filter_soft(author=author)
+    # if not books:
+    #     print("Не найдено ни одного совпадения.")
+    #     return
+    # table = Table(books, ("id", "title", "author", "year", "status"))
+    # table.show()
 
 
 @selective_search_menu.mark(name="Поиск по году издания")
@@ -57,7 +63,8 @@ def search_by_year_category(app: Library) -> None:
     if not books:
         print("Не найдено ни одного совпадения.")
         return
-    table = Table(books, ("id", "title", "author", "year", "status"))
+    data_list = get_data_books_for_table(books, app)
+    table = Table(data_list, ("id", "title", "author", "year", "status"))
     table.show()
 
 

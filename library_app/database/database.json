@@ -1,53 +1,37 @@
 {
-    "book": [
-        {
-            "title": "Приключения Незнайки и его друзей",
-            "author": "Носов",
-            "year": 2020,
-            "status": true,
-            "id": 1
-        },
-        {
-            "title": "Незнайка на Луне",
-            "author": "Носов",
-            "year": 2019,
-            "status": true,
-            "id": 2
-        },
-        {
-            "title": "Незнайка в Солнечном городе",
-            "author": "Носов",
-            "year": 2019,
-            "status": true,
-            "id": 3
-        },
-        {
-            "title": "Ночь перед Рождеством",
-            "author": "Гоголь",
-            "year": 1832,
-            "status": true,
-            "id": 4
-        },
-        {
-            "title": "Вий",
-            "author": "Гоголь",
-            "year": 1835,
-            "status": true,
-            "id": 5
-        },
-        {
-            "title": "Мастер и Маргарита",
-            "author": "Булгаков",
-            "year": 1967,
-            "status": true,
-            "id": 6
-        },
-        {
-            "title": "Собачье сердце",
-            "author": "Булгаков",
-            "year": 1968,
-            "status": true,
-            "id": 7
-        }
-    ]
+  "author": [
+    {
+      "first_name": "Николай",
+      "last_name": "Носов",
+      "id": 1
+    },
+    {
+      "first_name": "",
+      "last_name": "Гоголь",
+      "id": 2
+    }
+  ],
+  "book": [
+    {
+      "title": "Приключения Незнайки и его друзей",
+      "author_id": 1,
+      "year": 2020,
+      "status": true,
+      "id": 1
+    },
+    {
+      "title": "Вий",
+      "author_id": 2,
+      "year": 1983,
+      "status": true,
+      "id": 2
+    },
+    {
+      "title": "Незнайка на Луне",
+      "author_id": 1,
+      "year": 2019,
+      "status": true,
+      "id": 3
+    }
+  ]
 }
