@@ -27,7 +27,7 @@ class BaseModel:
     def looks_like_softly(self, **kwargs: str | int | bool) -> bool:
         """
         Мягкое соответствие.
-        Вернёт True, если поле модели начинается с переданного значения.
+        Вернёт True, если поле модели содержит переданное значение.
         Работает только для str, для других типов сравнение строгое.
         Если передаётся несколько значений, то True будет только если все сравнения вернут True.
 
@@ -36,7 +36,7 @@ class BaseModel:
         """
         return all(
             (
-                getattr(self, key).lower().startswith(value.lower())
+                value.lower() in getattr(self, key).lower()
                 if isinstance(value, str)
                 else getattr(self, key) == value
             )
