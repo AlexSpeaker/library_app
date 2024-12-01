@@ -1,11 +1,13 @@
 import json
 import re
 import threading
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 from unittest.mock import patch
 
 from core.classes.app import Library
 from core.classes.menu import Menu
+from core.db_models.author import Author
+from core.db_models.book import Book
 from settings.settings_class import Settings
 
 
@@ -71,6 +73,33 @@ def get_printed_text_and_input_text(
         "builtins.print"
     ) as mock_print:
         safe_to_execute_app(app)
-        printed_text = "".join(str(call.args[0]) for call in mock_print.call_args_list)
-        input_text = "".join(str(call.args[0]) for call in mock_input.call_args_list)
+        printed_text = "".join(
+            str(call.args[0]) if call.args else "" for call in mock_print.call_args_list
+        )
+        input_text = "".join(
+            str(call.args[0]) if call.args else "" for call in mock_input.call_args_list
+        )
     return printed_text, input_text
+
+
+def check_books_print(books: Sequence[Book], app: Library, printed_text: str) -> None:
+    """
+    Проверит, что последовательность из книг была верно показана пользователю.
+
+    :param books: Последовательность из книг.
+    :param app: Экземпляр класса Library.
+    :param printed_text: Текст, который был показан пользователю.
+    :return:
+    """
+    for book in books:
+        assert book.author_id
+        author: Optional[Author] = app.orm.select(Author).get(pk=book.author_id)
+        assert author is not None
+        pattern = (
+            rf"|\s*{book.id}\s*"
+            rf"|\s*{book.title}\s*"
+            rf"|\s*{''.join([author.first_name, author.last_name])}\s*"
+            rf"|\s*{book.year}\s*"
+            rf"|\s*{'В наличии' if book.status else 'Выдана'}\s*|"
+        )
+        assert re.search(pattern, printed_text)

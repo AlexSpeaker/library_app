@@ -40,4 +40,3 @@ def test_give_book_true(app_with_data: Library) -> None:
     assert "ID должно быть числом" in printed_text
     assert "Ошибка! Книга с ID=5000 не существует" in printed_text
     assert f"Книга '{book.title}' была успешно выдана читателю" in printed_text
-
