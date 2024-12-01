@@ -57,6 +57,7 @@ def search_by_author_category(app: Library) -> None:
         print("Не найдено ни одного автора.")
         return
     books_list: List[Book] = []
+    # Так как поиск мягкий, то могут найтись несколько авторов при неполном наборе имен.
     for author in authors:
         books = app.orm.select(Book).filter_strict(author_id=author.id)
         if books:

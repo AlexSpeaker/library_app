@@ -1,23 +1,70 @@
 {
   "authors": [
     {
-      "first_name": "dfg",
-      "last_name": "dfg",
+      "first_name": "Николай",
+      "last_name": "Носов",
       "id": 1
     },
     {
-      "first_name": "вап",
-      "last_name": "вапвап",
+      "first_name": "Михаил",
+      "last_name": "Булгаков",
       "id": 2
+    },
+    {
+      "first_name": "Николай",
+      "last_name": "Гоголь",
+      "id": 3
     }
   ],
   "books": [
     {
-      "title": "ываыва ",
-      "author_id": 2,
-      "year": 1988,
+      "title": "Приключения Незнайки и его друзей",
+      "author_id": 1,
+      "year": 2020,
       "status": true,
       "id": 1
+    },
+    {
+      "title": "Незнайка на Луне",
+      "author_id": 1,
+      "year": 2019,
+      "status": true,
+      "id": 2
+    },
+    {
+      "title": "Незнайка в Солнечном городе",
+      "author_id": 1,
+      "year": 2019,
+      "status": true,
+      "id": 3
+    },
+    {
+      "title": "Мастер и Маргарита",
+      "author_id": 2,
+      "year": 1967,
+      "status": false,
+      "id": 4
+    },
+    {
+      "title": "Собачье сердце",
+      "author_id": 2,
+      "year": 1968,
+      "status": true,
+      "id": 5
+    },
+    {
+      "title": "Ночь перед Рождеством",
+      "author_id": 3,
+      "year": 1832,
+      "status": true,
+      "id": 6
+    },
+    {
+      "title": "Вий",
+      "author_id": 3,
+      "year": 1835,
+      "status": false,
+      "id": 7
     }
   ]
 }

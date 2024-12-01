@@ -18,7 +18,9 @@ def add_book_category(app: Library) -> None:
     :return: None.
     """
     title = get_not_empty_string("Введите название книги (--exit для выхода): ")
-    author = get_not_empty_string("Ведите автора (--exit для выхода): ")
+    author = get_not_empty_string(
+        "Ведите автора (ввод должен быть Имя Фамилия) (--exit для выхода): "
+    )
     year = get_year("Введите год выпуска книги (--exit для выхода): ")
     author_info = author.split(" ")
     first_name, last_name = (
@@ -52,7 +54,7 @@ def delete_book_category(app: Library) -> None:
     id_book = get_id("Введите id книги (--exit для выхода): ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
-        print("Ошибка! Книга с ID={} не существует.".format(id_book))
+        print(f"Ошибка! Книга с ID={id_book} не существует.")
         return
     while True:
         user_choice = input(
@@ -68,7 +70,7 @@ def delete_book_category(app: Library) -> None:
         return
 
     app.orm.delete(book)
-    print("Книга '{}' была успешно удалена.".format(book.title))
+    print(f"Книга '{book.title}' была успешно удалена.")
 
 
 @book_manage_menu.mark(name="Выдать книгу читателю")
@@ -84,14 +86,14 @@ def give_book_category(app: Library) -> None:
     id_book = get_id("Введите id книги (--exit для выхода): ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
-        print("Ошибка! Книга с ID={} не существует.".format(id_book))
+        print(f"Ошибка! Книга с ID={id_book} не существует.")
         return
     elif not book.status:
-        print("Ошибка! Книга '{}' ранее уже была выдана читателю.".format(book.title))
+        print(f"Ошибка! Книга '{book.title}' ранее уже была выдана читателю.")
         return
     book.status = False
     app.orm.update(book)
-    print("Книга '{}' была успешно выдана читателю.".format(book.title))
+    print(f"Книга '{book.title}' была успешно выдана читателю.")
 
 
 @book_manage_menu.mark(name="Принять книгу")
@@ -107,18 +109,14 @@ def accept_book_category(app: Library) -> None:
     id_book = get_id("Введите id книги (--exit для выхода): ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
-        print("Ошибка! Книга с ID={} не существует.".format(id_book))
+        print(f"Ошибка! Книга с ID={id_book} не существует.")
         return
     elif book.status:
-        print(
-            "Ошибка! Книга '{}' ранее уже была возвращена в библиотеку.".format(
-                book.title
-            )
-        )
+        print(f"Ошибка! Книга '{book.title}' ранее уже была возвращена в библиотеку.")
         return
     book.status = True
     app.orm.update(book)
-    print("Книга '{}' была успешно возвращена в библиотеку.".format(book.title))
+    print(f"Книга '{book.title}' была успешно возвращена в библиотеку.")
 
 
 @book_manage_menu.mark(name="<-- Назад")

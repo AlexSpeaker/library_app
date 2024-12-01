@@ -1,10 +1,9 @@
 from typing import Sequence
 
 import pytest
-
 from core.classes.app import Library
 from core.db_models.book import Book
-from tests.tests.utils import get_printed_text_and_input_text, check_books_print
+from tests.tests.utils import check_books_print, get_printed_text_and_input_text
 
 
 @pytest.mark.app
@@ -34,7 +33,4 @@ def test_search_by_year(app_with_data: Library) -> None:
 
     # Проверяем, что все книги (вместе с данными) были показаны.
     check_books_print(books, app_with_data, printed_text)
-    assert (
-            "Введите год издания книги (--exit для выхода)"
-            in input_text
-    )
+    assert "Введите год издания книги (--exit для выхода)" in input_text
