@@ -67,6 +67,6 @@ def test_app_create_book(app_no_data: Library) -> None:
     assert printed_text.count("Год должен быть формата YYYY, где Y это цифра") == 2
     assert f"Год должен быть от 1000 до {datetime.now().year}" in printed_text
 
-    assert "Введите название книги" in input_text
-    assert "Ведите автора" in input_text
-    assert "Введите год выпуска книги" in input_text
+    assert "Введите название книги (--exit для выхода)" in input_text
+    assert "Ведите автора (--exit для выхода)" in input_text
+    assert "Введите год выпуска книги (--exit для выхода)" in input_text

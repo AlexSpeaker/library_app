@@ -38,5 +38,5 @@ def test_delete_book_true(app_with_data: Library) -> None:
     assert "ID должно быть числом" in printed_text
     assert "Ошибка! Книга с ID=5000 не существует" in printed_text
     assert f"Книга '{book.title}' была успешно удалена" in printed_text
-    assert "Введите id книги" in input_text
+    assert "Введите id книги (--exit для выхода)" in input_text
     assert f"Вы действительно хотите удалить книгу '{book.title}' (N/y)" in input_text
