@@ -1,1 +1,23 @@
-{}
+{
+  "authors": [
+    {
+      "first_name": "dfg",
+      "last_name": "dfg",
+      "id": 1
+    },
+    {
+      "first_name": "вап",
+      "last_name": "вапвап",
+      "id": 2
+    }
+  ],
+  "books": [
+    {
+      "title": "ываыва ",
+      "author_id": 2,
+      "year": 1988,
+      "status": true,
+      "id": 1
+    }
+  ]
+}

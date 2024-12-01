@@ -17,9 +17,9 @@ def add_book_category(app: Library) -> None:
     :param app: Экземпляр класса Library.
     :return: None.
     """
-    title = get_not_empty_string("Введите название книги: ")
-    author = get_not_empty_string("Ведите автора: ")
-    year = get_year("Введите год выпуска книги: ")
+    title = get_not_empty_string("Введите название книги (--exit для выхода): ")
+    author = get_not_empty_string("Ведите автора (--exit для выхода): ")
+    year = get_year("Введите год выпуска книги (--exit для выхода): ")
     author_info = author.split(" ")
     first_name, last_name = (
         (author_info[0], author_info[1])
@@ -49,7 +49,7 @@ def delete_book_category(app: Library) -> None:
     :param app: Экземпляр класса Library.
     :return: None.
     """
-    id_book = get_id("Введите id книги: ")
+    id_book = get_id("Введите id книги (--exit для выхода): ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
         print("Ошибка! Книга с ID={} не существует.".format(id_book))
@@ -58,9 +58,13 @@ def delete_book_category(app: Library) -> None:
         user_choice = input(
             f"Вы действительно хотите удалить книгу '{book.title}' (N/y): "
         )
-        if user_choice.lower() == "y" or user_choice.lower() == "n":
+        if (
+            user_choice.lower() == "y"
+            or user_choice.lower() == "n"
+            or user_choice.lower().strip() == ""
+        ):
             break
-    if user_choice.lower() == "n":
+    if user_choice.lower() == "n" or user_choice.lower().strip() == "":
         return
 
     app.orm.delete(book)
@@ -77,7 +81,7 @@ def give_book_category(app: Library) -> None:
     :param app: Экземпляр класса Library.
     :return: None.
     """
-    id_book = get_id("Введите id книги: ")
+    id_book = get_id("Введите id книги (--exit для выхода): ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
         print("Ошибка! Книга с ID={} не существует.".format(id_book))
@@ -100,7 +104,7 @@ def accept_book_category(app: Library) -> None:
     :param app: Экземпляр класса Library.
     :return: None.
     """
-    id_book = get_id("Введите id книги: ")
+    id_book = get_id("Введите id книги (--exit для выхода): ")
     book: Optional[Book] = app.orm.select(Book).get(int(id_book))
     if not book:
         print("Ошибка! Книга с ID={} не существует.".format(id_book))

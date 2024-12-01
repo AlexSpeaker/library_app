@@ -1,7 +1,7 @@
 import json
 import re
 import threading
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 from unittest.mock import patch
 
 from core.classes.app import Library
@@ -46,11 +46,7 @@ def check_menu(app: Library, scenario: List[str], menu: Menu) -> None:
     :param menu: Экземпляр класса Menu.
     :return: None.
     """
-    with patch("builtins.input", side_effect=scenario), patch(
-        "builtins.print"
-    ) as mock_print:
-        safe_to_execute_app(app)
-        printed_text = "".join(call.args[0] for call in mock_print.call_args_list)
+    printed_text, _ = get_printed_text_and_input_text(app, scenario)
 
     pattern = rf"\*\s+{menu.get_title()}" + r"((.+?)(?=\*{4,}))"
     menu_re = re.search(pattern, printed_text)
@@ -60,3 +56,21 @@ def check_menu(app: Library, scenario: List[str], menu: Menu) -> None:
     # Проверим, что все категории присутствуют в меню.
     for category in menu.get_menu_list():
         assert category in menu_str
+
+
+def get_printed_text_and_input_text(
+    app: Library, scenario: List[str]
+) -> Tuple[str, str]:
+    """
+    Функция выполнит сценарий и вернёт всё то, что выводилось на экран.
+    :param app: Экземпляр класса Library.
+    :param scenario: Сценарий.
+    :return: Вернёт кортеж: 'print' текст, 'input' текст.
+    """
+    with patch("builtins.input", side_effect=scenario) as mock_input, patch(
+        "builtins.print"
+    ) as mock_print:
+        safe_to_execute_app(app)
+        printed_text = "".join(str(call.args[0]) for call in mock_print.call_args_list)
+        input_text = "".join(str(call.args[0]) for call in mock_input.call_args_list)
+    return printed_text, input_text

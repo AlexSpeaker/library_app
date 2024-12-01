@@ -22,7 +22,7 @@ def search_by_title_category(app: Library) -> None:
     :param app: Экземпляр класса Library.
     :return: None.
     """
-    title = get_not_empty_string("Введите название книги: ")
+    title = get_not_empty_string("Введите название книги (--exit для выхода): ")
     books: Sequence[Book] = app.orm.select(Book).filter_soft(title=title)
     if not books:
         print("Не найдено ни одного совпадения.")
@@ -43,7 +43,7 @@ def search_by_author_category(app: Library) -> None:
     :return: None.
     """
     author_name = get_not_empty_string(
-        "Введите автора книги (ввод должен быть Имя Фамилия, или только Фамилия): "
+        "Введите автора книги (ввод должен быть Имя Фамилия, или только Фамилия) (--exit для выхода): "
     )
     name_obj = author_name.split(" ")
     first_name, last_name = name_obj if len(name_obj) == 2 else (None, name_obj[0])
@@ -78,7 +78,7 @@ def search_by_year_category(app: Library) -> None:
     :param app: Экземпляр класса Library.
     :return: None.
     """
-    year = get_year("Введите год издания книги: ")
+    year = get_year("Введите год издания книги (--exit для выхода): ")
     books: Sequence[Book] = app.orm.select(Book).filter_strict(year=int(year))
     if not books:
         print("Не найдено ни одного совпадения.")
