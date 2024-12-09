@@ -121,7 +121,7 @@ class Menu:
         """
         if self.__app is None:
             raise NoAppClass(
-                "В меню не нашлось экземпляра игры. Воспользуйтесь методом 'set_game'"
+                "В меню не нашлось экземпляра приложения. Воспользуйтесь методом 'set_app'"
             )
         menu = self.__get_enabled_menu()
         func = self.__menu_dict[menu[int(choice_user) - 1]].func
